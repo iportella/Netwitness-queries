@@ -1,0 +1,122 @@
+# =============================================================================
+#  ██╗███╗   ██╗███████╗██╗    ██╗██╗████████╗██╗   ██╗███████╗███████╗███████╗
+#  ██║████╗  ██║██╔════╝██║    ██║██║╚══██╔══╝██║   ██║██╔════╝██╔════╝██╔════╝
+#  ██║██╔██╗ ██║█████╗  ██║ █╗ ██║██║   ██║   ██║   ██║█████╗  █████╗  ███████╗
+#  ██║██║╚██╗██║██╔══╝  ██║███╗██║██║   ██║   ██║   ██║██╔══╝  ██╔══╝  ╚════██║
+#  ██║██║ ╚████║███████╗╚███╔███╔╝██║   ██║   ╚██████╔╝███████╗███████╗███████║
+#  ╚═╝╚═╝  ╚═══╝╚══════╝ ╚══╝╚══╝ ╚═╝   ╚═╝    ╚═════╝ ╚══════╝╚══════╝╚══════╝
+# -----------------------------------------------------------------------------
+#  NetWitness Query Pack
+# -----------------------------------------------------------------------------
+#  Description : Query set for detecting external connections, remote access
+#                attempts and inappropriate browsing using RSA NetWitness.
+#  Categories  : External IPs, SSH/RDP/Telnet, HTTP/FTP/SMB, Porn, Gambling,
+#                Social Media
+#  Author      : Igor Portella
+#  Email       : igorlllopesport@protonmail.com
+#  Version     : 1.0
+#  License     : MIT
+#  Disclaimer  : For authorized and educational use only.
+# =============================================================================
+
+# ============================================================================
+# 🌐 Conexões externas (qualquer protocolo) | External connections (any protocol)
+# ============================================================================
+(ip.src!=[10.0.0.0/8,172.16.0.0/12,192.168.0.0/16] || ip.dst!=[10.0.0.0/8,172.16.0.0/12,192.168.0.0/16])
+
+# ============================================================================
+# 🚨 Acessos remotos de origem externa | Remote access from external origin
+# ============================================================================
+
+# SSH
+(ip.src != 10.0.0.0/8 && ip.src != 172.16.0.0/12 && ip.src != 192.168.0.0/16) && ip.dstport = 22 && action != "blocked"
+
+# Telnet
+(ip.src != 10.0.0.0/8 && ip.src != 172.16.0.0/12 && ip.src != 192.168.0.0/16) && ip.dstport = 23 && action != "blocked"
+
+# RDP
+(ip.src != 10.0.0.0/8 && ip.src != 172.16.0.0/12 && ip.src != 192.168.0.0/16) && ip.dstport = 3389 && action != "blocked"
+
+# HTTP
+(ip.src != 10.0.0.0/8 && ip.src != 172.16.0.0/12 && ip.src != 192.168.0.0/16) && ip.dstport = 80 && action != "blocked"
+
+# SMB
+(ip.src != 10.0.0.0/8 && ip.src != 172.16.0.0/12 && ip.src != 192.168.0.0/16) && ip.dstport = 445 && action != "blocked"
+
+# SMTP
+(ip.src != 10.0.0.0/8 && ip.src != 172.16.0.0/12 && ip.src != 192.168.0.0/16) && ip.dstport = 25 && action != "blocked"
+
+# FTP
+(ip.src != 10.0.0.0/8 && ip.src != 172.16.0.0/12 && ip.src != 192.168.0.0/16) && ip.dstport = 21 && action != "blocked"
+
+# ============================================================================
+# 📤 Conexões de saída para IPs públicos | Outbound connections to public IPs
+# ============================================================================
+
+# SSH
+(ip.dst != 10.0.0.0/8 && ip.dst != 172.16.0.0/12 && ip.dst != 192.168.0.0/16) && ip.dstport = 22 && action != "blocked"
+
+# Telnet
+(ip.dst != 10.0.0.0/8 && ip.dst != 172.16.0.0/12 && ip.dst != 192.168.0.0/16) && ip.dstport = 23 && action != "blocked"
+
+# RDP
+(ip.dst != 10.0.0.0/8 && ip.dst != 172.16.0.0/12 && ip.dst != 192.168.0.0/16) && ip.dstport = 3389 && action != "blocked"
+
+# HTTP
+(ip.dst != 10.0.0.0/8 && ip.dst != 172.16.0.0/12 && ip.dst != 192.168.0.0/16) && ip.dstport = 80 && action != "blocked"
+
+# SMB
+(ip.dst != 10.0.0.0/8 && ip.dst != 172.16.0.0/12 && ip.dst != 192.168.0.0/16) && ip.dstport = 445 && action != "blocked"
+
+# SMTP
+(ip.dst != 10.0.0.0/8 && ip.dst != 172.16.0.0/12 && ip.dst != 192.168.0.0/16) && ip.dstport = 25 && action != "blocked"
+
+# FTP
+(ip.dst != 10.0.0.0/8 && ip.dst != 172.16.0.0/12 && ip.dst != 192.168.0.0/16) && ip.dstport = 21 && action != "blocked"
+
+# ============================================================================
+# 🔞 Sites impróprios - Pornografia | Inappropriate sites - Porn
+# ============================================================================
+action != "blocked" && host.dst contains "porn"
+action != "blocked" && host.dst contains "sexo"
+action != "blocked" && host.dst contains "brazzino"
+action != "blocked" && host.dst contains "brazzer"
+action != "blocked" && host.dst contains "xvideos"
+action != "blocked" && host.dst contains "stripchat"
+action != "blocked" && host.dst contains "chaturbate"
+action != "blocked" && host.dst contains "onlyfans"
+action != "blocked" && host.dst contains "privacy"
+action != "blocked" && host.dst contains "fansly"
+action != "blocked" && host.dst contains "redtube"
+action != "blocked" && host.dst contains "peeg"
+action != "blocked" && host.dst contains "xnxx"
+action != "blocked" && host.dst contains "myfreecams"
+action != "blocked" && host.dst contains "socinquenta"
+action != "blocked" && host.dst contains "acompanhante"
+action != "blocked" && host.dst contains "hentai"
+action != "blocked" && host.dst contains "rule34"
+action != "blocked" && host.dst contains "sacana"
+action != "blocked" && host.dst contains "wchat75"
+
+# ============================================================================
+# 🎰 Sites de apostas | Gambling sites
+# ============================================================================
+action != "blocked" && host.dst contains "bet"
+action != "blocked" && host.dst contains "aposta"
+action != "blocked" && host.dst contains "blaze"
+action != "blocked" && host.dst contains "xsasports"
+action != "blocked" && host.dst contains "cassino"
+
+# ============================================================================
+# 📱 Redes sociais | Social media
+# ============================================================================
+action != "blocked" && host.dst contains "tinder"
+action != "blocked" && host.dst contains "twitter"
+action != "blocked" && host.dst contains "telegram"
+action != "blocked" && host.dst contains "badoo"
+action != "blocked" && host.dst contains "facebook"
+action != "blocked" && host.dst contains "instagram"
+action != "blocked" && host.dst contains "bumble"
+action != "blocked" && host.dst contains "happn"
+action != "blocked" && host.dst contains "innercircle"
+action != "blocked" && host.dst contains "casais"
